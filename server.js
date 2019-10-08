@@ -20,20 +20,22 @@ sock.on('message', (topicBuffer, message) => {
   const topic = topicBuffer.toString();
   let result;
   const command = message.toString();
-  debug(`Requested to run ${command}:`);
-  switch (topic) {
-    case 'task':
-      result = exec(command, (err, stdout, stderr) => {
-        if (err) {
-          debug(err);
-          sock.send(JSON.stringify({ err, statusCode: result.exitCode }));
-        } else {
-          debug(`stdout: ${stdout}`);
-          debug(`stderr: ${stderr}`);
-          sock.send(JSON.stringify({ stdout, statusCode: result.exitCode }));
-        }
-      });
-      break;
-    default: break;
+  if (command) {
+    debug(`Requested to run ${command}:`);
+    switch (topic) {
+      case 'task':
+        result = exec(command, (err, stdout, stderr) => {
+          if (err) {
+            debug(err);
+            sock.send(JSON.stringify({ err, statusCode: result.exitCode }));
+          } else {
+            debug(`stdout: ${stdout}`);
+            debug(`stderr: ${stderr}`);
+            sock.send(JSON.stringify({ stdout, statusCode: result.exitCode }));
+          }
+        });
+        break;
+      default: break;
+    }
   }
 });
