@@ -16,11 +16,12 @@ const sock = zmq.socket('req');
 sock.connect(`tcp://${host}:${port}`);
 
 setInterval(() => {
-  const command = 'ls';
+  const command = 'adfb';
   debug(`sending a command ${command}`);
   sock.send(['task', command]);
 }, seconds(1));
 
 sock.on('message', (message) => {
-  debug(message.toString());
+  const response = JSON.parse(message.toString());
+  debug(response);
 });
